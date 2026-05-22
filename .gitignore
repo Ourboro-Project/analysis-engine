@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# datasets
+datasets/
+*.csv
+
+# conda / environments
+.env
+.venv/
+env/
+
+# macOS
+.DS_Store
+
+# logs
+*.log
