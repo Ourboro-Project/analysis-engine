@@ -1,4 +1,4 @@
-name: anova_analysis
+name: anova_env
 channels:			
   - conda-forge
 dependencies:

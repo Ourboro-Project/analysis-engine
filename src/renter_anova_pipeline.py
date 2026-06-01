@@ -10,6 +10,8 @@ DATA_PATH = BASE_DIR / "datasets" / "renter_survey_long.csv"
 
 df = pd.read_csv(DATA_PATH)
 
+print(df.head())
+
 group_col = "cluster"
 year_col = "year"
 metrics = ["age", "happiness", "down_payment"]
@@ -32,25 +34,25 @@ def run_anova(df, dv):
     print(f"METRIC: {dv}")
     print("="*60)
 
-    # -------------------------
-    # 1. Group summary table
-    # -------------------------
-    group_stats = (
-        df.groupby(group_col)[dv]
-        .agg(N="count", Mean="mean", SD="std")
-        .reset_index()
-    )
+    # # -------------------------
+    # # 1. Group summary table
+    # # -------------------------
+    # group_stats = (
+    #     df.groupby(group_col)[dv]
+    #     .agg(N="count", Mean="mean", SD="std")
+    #     .reset_index()
+    # )
 
-    group_stats["SE"] = group_stats["SD"] / np.sqrt(group_stats["N"])
+    # group_stats["SE"] = group_stats["SD"] / np.sqrt(group_stats["N"])
 
-    # formatting
-    group_stats["Mean"] = group_stats["Mean"].round(2)
-    group_stats["SD"] = group_stats["SD"].round(2)
-    group_stats["SE"] = group_stats["SE"].round(2)
+    # # formatting
+    # group_stats["Mean"] = group_stats["Mean"].round(2)
+    # group_stats["SD"] = group_stats["SD"].round(2)
+    # group_stats["SE"] = group_stats["SE"].round(2)
 
 
-    print("\n[Group Summary]")
-    print(group_stats)
+    # print("\n[Group Summary]")
+    # print(group_stats)
 
     # -------------------------
     # 2. ANOVA (SciPy)
@@ -104,6 +106,30 @@ def posthoc(df, dv):
     )
     print("\n[Posthoc - Tukey HSD]")
     print(tukey)
+
+
+
+def create_group_summary(df, group_col, dv):
+    summary = (
+        df.groupby(group_col)[dv]
+        .agg(N="count", Mean="mean", SD="std")
+        .reset_index()
+    )
+    summary["SE"] = summary["SD"] / np.sqrt(summary["N"])       # SE: Standard Error
+
+    # formatting
+    # summary["Mean"] = summary["Mean"].round(2)
+    # summary["SD"] = summary["SD"].round(2)
+    # summary["SE"] = summary["SE"].round(2)
+
+    return summary
+
+
+
+
+
+
+
 
 
 # Run for all metrics
