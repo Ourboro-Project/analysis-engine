@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_PATH = BASE_DIR / "datasets" / "renter_survey_long.csv"
+DATA_PATH = BASE_DIR / "datasets" / "sample_anova_input.csv"
 
 df = pd.read_csv(DATA_PATH)
 
@@ -34,25 +34,25 @@ def run_anova(df, dv):
     print(f"METRIC: {dv}")
     print("="*60)
 
-    # # -------------------------
-    # # 1. Group summary table
-    # # -------------------------
-    # group_stats = (
-    #     df.groupby(group_col)[dv]
-    #     .agg(N="count", Mean="mean", SD="std")
-    #     .reset_index()
-    # )
+    # -------------------------
+    # 1. Group summary table
+    # -------------------------
+    group_stats = (
+        df.groupby(group_col)[dv]
+        .agg(N="count", Mean="mean", SD="std")
+        .reset_index()
+    )
 
-    # group_stats["SE"] = group_stats["SD"] / np.sqrt(group_stats["N"])
+    group_stats["SE"] = group_stats["SD"] / np.sqrt(group_stats["N"])
 
-    # # formatting
-    # group_stats["Mean"] = group_stats["Mean"].round(2)
-    # group_stats["SD"] = group_stats["SD"].round(2)
-    # group_stats["SE"] = group_stats["SE"].round(2)
+    # formatting
+    group_stats["Mean"] = group_stats["Mean"].round(2)
+    group_stats["SD"] = group_stats["SD"].round(2)
+    group_stats["SE"] = group_stats["SE"].round(2)
 
 
-    # print("\n[Group Summary]")
-    # print(group_stats)
+    print("\n[Group Summary]")
+    print(group_stats)
 
     # -------------------------
     # 2. ANOVA (SciPy)
@@ -123,11 +123,6 @@ def create_group_summary(df, group_col, dv):
     # summary["SE"] = summary["SE"].round(2)
 
     return summary
-
-
-
-
-
 
 
 

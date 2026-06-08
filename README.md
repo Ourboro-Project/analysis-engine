@@ -28,7 +28,7 @@ The project may later include:
 ### Clone Repository
 
 ```bash
-git clone .........*need to add url later*
+git clone <repo-url>
 cd anova-analysis
 ```
 
