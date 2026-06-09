@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from .reporting.utils import format_p, format_posthoc_table, interpret_eta_squared
 import pandas as pd
 
 @dataclass
@@ -13,6 +14,9 @@ class ANOVAResult:
     for better readability, easier debugging, and future extensibility.
     """
     
+    # Descriptive statistics
+    group_stats: pd.DataFrame  
+
     # Sum of Squares
     SSB: float
     SSW: float
@@ -30,15 +34,22 @@ class ANOVAResult:
     F: float
     p: float
 
-    # default significance level
+    # Default significance level
     alpha: float = 0.05  
     
-    # for the future: effect size and post-hoc results
-    # eta_squared: float | None = None
-    # posthoc_df: pd.DataFrame | None = field(default=None, repr=False)
-    # group_stats: pd.DataFrame | None = field(default=None, repr=False)
+    # Optional post-analysis when significant
+    eta_squared: float | None = None
+    posthoc_df: pd.DataFrame | None = field(default=None, repr=False)
+
 
     @property
     def is_significant(self) -> bool:
-        """Determine if the ANOVA result is statistically significant."""
+        """
+        Determine if the ANOVA result is statistically significant.
+        True if p-value is smaller than alpha.
+        
+        """
         return self.p < self.alpha
+    
+
+    

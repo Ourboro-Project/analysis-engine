@@ -1,6 +1,5 @@
 from scipy.stats import f_oneway
-from anova_result import ANOVAResult
-from anova_engine import load_data, run_anova
+from ..models import ANOVAResult
 import numpy as np
 
 def validate_anova(manual_result: ANOVAResult, df, group_col, dv) -> dict:
@@ -33,9 +32,9 @@ def validate_anova(manual_result: ANOVAResult, df, group_col, dv) -> dict:
         "ref_p":    ref_p
     }
 
-data = load_data("sample_anova_input.csv")
-manual_result = run_anova(data, "cluster", "happiness")
-validation_result = validate_anova(manual_result, data, "cluster", "happiness")
-print("\n=== VALIDATION RESULT ===")
-for k, v in validation_result.items():
-    print(f"{k:<15}: {v}")
+# data = load_data("sample_anova_input.csv")
+# manual_result = run_anova(data, "cluster", "happiness")
+# validation_result = validate_anova(manual_result, data, "cluster", "happiness")
+# print("\n=== VALIDATION RESULT ===")
+# for k, v in validation_result.items():
+#     print(f"{k:<15}: {v}")

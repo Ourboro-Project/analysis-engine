@@ -1,4 +1,4 @@
-from anova_result import ANOVAResult
+from ..models import ANOVAResult
 
 def calculate_effect_size(result: ANOVAResult) -> float:
     """

@@ -1,5 +1,5 @@
 name: anova_env
-channels:			
+channels:
   - conda-forge
 dependencies:
   - python=3.11
