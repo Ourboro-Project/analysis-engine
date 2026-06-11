@@ -1,12 +1,12 @@
 from ..modules.stats import calculate_sum_of_squares, calculate_anova_statistics
-from ..modules.descriptive import calculate_group_statistics
+from ..modules.descriptive import calculate_group_statistics, calculate_year_means
 from ..modules.effect_size import calculate_effect_size
 from ..modules.posthoc import run_posthoc
 from ..models import ANOVAResult
 import pandas as pd
 
 
-def run_anova(df, group_col, dv, alpha: float = 0.05) -> ANOVAResult:
+def run_anova(df, group_col, dv, year_col: str | None = None, alpha: float = 0.05) -> ANOVAResult:
     """
     Run a complete ANOVA analysis pipeline.
 
@@ -22,6 +22,7 @@ def run_anova(df, group_col, dv, alpha: float = 0.05) -> ANOVAResult:
         df: input dataset
         group_col: grouping variable (IV)
         dv: dependent variable (DV)
+        year_col: optional column for grouped mean trends over an ordered variable (e.g., time, wave, stages)
         alpha: significance level for hypothesis testing (default: 0.05)
 
     Returns:
@@ -77,6 +78,8 @@ def run_anova(df, group_col, dv, alpha: float = 0.05) -> ANOVAResult:
 
     anova_result = ANOVAResult(
         group_stats = calculate_group_statistics(df, group_col, dv),
+        dv = dv,
+        year_means = calculate_year_means(df, group_col, year_col, dv) if year_col else None,
         SSB = ss["SSB"],
         SSW = ss["SSW"],
         SST = ss["SST"],

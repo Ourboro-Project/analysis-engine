@@ -1,21 +1,37 @@
 from ..models import ANOVAResult
-from .utils import format_p, interpret_eta_squared, format_posthoc_table
+from .utils import format_p, interpret_eta_squared, format_posthoc_table, format_descriptive_table, format_year_means_table
 
-def generate_spss_report(result: ANOVAResult) -> str:
+def generate_report(result: ANOVAResult) -> str:
         sig_text = (
             "statistically significant"
             if result.is_significant
             else "not statistically significant"
         )
 
+        group_stats_text = (
+             format_descriptive_table(result.group_stats)
+             .to_string(index=False)
+             )
+        
+        dv_title = result.dv.replace("_", " ").title()
+
+        year_means_text = (
+             format_year_means_table(result.year_means)
+             .to_string(index=False)
+             if result.year_means is not None
+             else "Year means not available"
+        )       
+        
         result_text = f"""
 ==============================
 ONE-WAY ANOVA RESULT
 ==============================
 
 --- DESCRIPTIVE STATISTICS ---
-{result.group_stats.to_string(index=False)}
+{group_stats_text}
 
+--- {dv_title} Index Mean Values ---
+{year_means_text}
 
 --- ANOVA TABLE ---
 F({result.df_between}, {result.df_within}) = {result.F:.3f}
@@ -33,7 +49,10 @@ Result: {sig_text} (alpha = {result.alpha})
                 else "eta_squared: not available"
             )
 
-            posthoc_text = format_posthoc_table(result.posthoc_df)
+            posthoc_text = (
+                 format_posthoc_table(result.posthoc_df)
+                 .to_string(index=False)
+            )
 
             result_text += f"""
 

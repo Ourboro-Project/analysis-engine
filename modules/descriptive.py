@@ -30,3 +30,20 @@ def calculate_group_statistics(
     summary["SE"] = summary["SD"] / np.sqrt(summary["N"])
 
     return summary
+
+def calculate_year_means(
+    df: pd.DataFrame,
+    group_col: str,
+    year_col: str,
+    dv: str
+) -> pd.DataFrame:
+    """
+    Calculate mean of DV by group and year.
+    Returns a pivot table: rows = groups, columns = years.
+    """
+    return (
+        df.groupby([group_col, year_col])[dv]
+        .mean()
+        .round(4)
+        .unstack(level=year_col)
+    )

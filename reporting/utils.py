@@ -27,11 +27,38 @@ def interpret_eta_squared(eta: float) -> str:
     else:
         return "Small Effect"
 
+def format_descriptive_table(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Convert raw group statistics into standardized reporting table.
+    
+    """
+    result = pd.DataFrame()
+
+    result["Cluster"] = df["cluster"]
+    result["N"] = df["N"].astype(int)
+    result["Mean"] = df["Mean"].round(2)
+    result["SD"] = df["SD"].round(2)
+    result["SE"] = df["SE"].round(2)
+    
+    return result
+
+def format_year_means_table(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Convert raw pivot table (group x year means) into standardized reporting format.
+    
+    """
+
+    result = df.copy().round(2)
+
+    result.index.name = "Cluster"
+    result = result.reset_index()
+
+    return result
+
 
 def format_posthoc_table(df: pd.DataFrame) -> pd.DataFrame:
     """
     Convert raw Tukey output into standardized analysis table.
-    Args:
 
     """
 

@@ -15,7 +15,8 @@ class ANOVAResult:
     """
     
     # Descriptive statistics
-    group_stats: pd.DataFrame  
+    group_stats: pd.DataFrame
+    dv: str 
 
     # Sum of Squares
     SSB: float
@@ -36,6 +37,9 @@ class ANOVAResult:
 
     # Default significance level
     alpha: float = 0.05  
+
+    # Year mean comparison (optional, for ordered group trends)
+    year_means: pd.DataFrame | None = field(default=None, repr=False)
     
     # Optional post-analysis when significant
     eta_squared: float | None = None
