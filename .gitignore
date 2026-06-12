@@ -9,6 +9,10 @@ __pycache__/
 datasets/
 *.csv
 
+# report outputs
+*.html
+*.csv
+
 # conda / environments
 .env
 .venv/
