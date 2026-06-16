@@ -5,7 +5,7 @@ import numpy as np
 
 def calculate_sum_of_squares(
     df: pd.DataFrame,
-    group_col: str,
+    iv: str,
     dv: str
 ) -> dict:
     """
@@ -13,8 +13,8 @@ def calculate_sum_of_squares(
 
     Args:
         df: input dataset
-        group_col: grouping variable (IV)
-        dv: dependent variable (DV)
+        iv: independent variable (clustering variable)
+        dv: dependent variable 
 
     Returns:
         SSB: between-group variation (explained by group differences)
@@ -27,7 +27,7 @@ def calculate_sum_of_squares(
     SSB = 0.0
     SSW = 0.0
 
-    for _, g in df.groupby(group_col):
+    for _, g in df.groupby(iv):
         values = g[dv].values
         group_mean = values.mean()
         n = len(values)
@@ -95,11 +95,3 @@ def calculate_anova_statistics(ss, n_groups, n_samples) -> dict:
         "p": p
     }
 
-# print("ANOVA Statistics:\n")
-# ss = calculate_sum_of_squares(data, "cluster", "happiness")
-# n_groups = data["cluster"].nunique()
-# n_samples = len(data)
-# print(f"SS: {ss}")
-# print(f"n_groups: {n_groups}")
-# print(f"n_samples: {n_samples}")
-# print(calculate_anova_statistics(ss, n_groups, n_samples))

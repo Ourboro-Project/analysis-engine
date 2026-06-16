@@ -104,14 +104,13 @@ def generate_apa_report(result: ANOVAResult) -> str:
 Table 1 
 Clusters and {dv_title} ANOVA
 
-{dv_title} Index Mean Values
+{dv_title} Index Mean Trends by Wave
 F = {result.F:.3f} (difference between groups)
 {format_p(result.p)}
 
 {desc_df.to_string(index=False)}
 """.strip()
     
-
     # Table 2: Year means
     if result.year_means is not None:
         year_df = format_year_means_table(result.year_means)
@@ -126,7 +125,6 @@ Table 2
 {table2_body}
 """.strip()
     
-
     # Table 3: ANOVA summary table
     anova_df = build_anova_summary_table(result).to_string(index=False)
 
@@ -136,7 +134,6 @@ ANOVA Summary Table
 
 {anova_df}
 """.strip()
-
 
     # Table 4: Post-hoc (only if significant)
     if result.is_significant and result.posthoc_df is not None:
@@ -151,7 +148,6 @@ Post-hoc Comparisons (Tukey HSD)
 {posthoc_df.to_string(index=False)}
 """.strip()
         
-
     # APA-style summary text   
     eta_str = f", η² = {result.eta_squared:.3f}" if result.eta_squared else ""
 
@@ -207,7 +203,7 @@ def generate_html_report(result: ANOVAResult) -> str:
         year_html = "<p>Year means not available</p>"
 
     table2 = f"""
-    <h3>Table 2. {dv_title} Index Mean Values by Year</h3>
+    <h3>Table 2. {dv_title} Index Mean Trends by Wave</h3>
     {year_html}
     """
 
@@ -231,7 +227,6 @@ def generate_html_report(result: ANOVAResult) -> str:
 
     return f"""
     <div class="anova-report">
-        <h2>One-Way ANOVA Report</h2>
         {interpretation}
         {table1}
         {table2}

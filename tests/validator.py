@@ -2,15 +2,15 @@ from scipy.stats import f_oneway
 from ..models import ANOVAResult
 import numpy as np
 
-def validate_anova(manual_result: ANOVAResult, df, group_col, dv) -> dict:
+def validate_anova(manual_result: ANOVAResult, df, iv, dv) -> dict:
     """
     Validate manual ANOVA results using SciPy's f_oneway as a reference.
 
     Args:
         manual_result: ANOVAResult object from manual calculation
         df: input dataset
-        group_col: grouping variable (IV)
-        dv: dependent variable (DV)
+        iv: independent variable (clustering variable)
+        dv: dependent variable 
 
     Returns:
         F_match: whether F-values match
@@ -19,7 +19,7 @@ def validate_anova(manual_result: ANOVAResult, df, group_col, dv) -> dict:
         ref_F: F-value from SciPy reference
     """
     
-    groups = [g[dv].values for _, g in df.groupby(group_col)]
+    groups = [g[dv].values for _, g in df.groupby(iv)]
     ref_F, ref_p = f_oneway(*groups)
 
     # rtol is used because floating-point calculations may have small rounding differences
@@ -32,9 +32,3 @@ def validate_anova(manual_result: ANOVAResult, df, group_col, dv) -> dict:
         "ref_p":    ref_p
     }
 
-# data = load_data("sample_anova_input.csv")
-# manual_result = run_anova(data, "cluster", "happiness")
-# validation_result = validate_anova(manual_result, data, "cluster", "happiness")
-# print("\n=== VALIDATION RESULT ===")
-# for k, v in validation_result.items():
-#     print(f"{k:<15}: {v}")
