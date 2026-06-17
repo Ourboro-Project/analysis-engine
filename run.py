@@ -2,47 +2,56 @@ import sys
 from pathlib import Path
 import pandas as pd
 
-sys.path.insert(0, "/mnt/podman-data/mjhan")
+sys.path.insert(0, "/mnt/podman-data/mjhan") # Temporary path: To be removed after packaging setup (pip install -e .)
 
 from anova_analysis.strategies.one_way import run_anova 
 from anova_analysis.reporting.report import generate_report, generate_apa_report, generate_html_report
 
-
 BASE_DIR = Path(__file__).resolve().parent
+OUTPUT_DIR = BASE_DIR / "outputs"
+OUTPUT_DIR.mkdir(exist_ok=True)
 
-def load_data(filename: str) -> pd.DataFrame:
-    return pd.read_csv(BASE_DIR / "datasets" / filename)
+df = pd.read_csv(BASE_DIR/"datasets"/"sample_anova_input.csv")
 
+def run_anova_service(df, iv, dv_list, wave):
+    """
+    Run One-Way ANOVA for multiple dependent variables.
 
-def run_anova_service():
-    data = load_data("sample_anova_input.csv")
+    Args:
+        df: input dataset containing IV, DV(s), and wave column
+        iv: independent variable (clustering variable)
+        dv_list: list of dependent variables to analyze
+        wave: survey wave/time indicator
 
-    iv = "cluster"
-    wave = "wave"
-    dv_list = ["happiness", "down_payment"]
-
+    Returns:
+        list of ANOVA results, one per dependent variable
+    """
     results = [
-        run_anova(data, iv, dv, wave)
+        run_anova(df, iv, dv, wave)
         for dv in dv_list
     ]
 
-    return results, dv_list
+    return results
 
-results, dv_list = run_anova_service()
+anova_results = run_anova_service( 
+    df,
+    "cluster_label",
+    ["happiness", "down_payment"],
+    "wave")
 
-for r in results:
+for r in anova_results:
     print(f"Report:\n\n{generate_report(r)}")
     print(f"APA Style Report:\n\n{generate_apa_report(r)}\n")
 
 
 html_reports = []
 
-for r, dv in zip(results, dv_list):
+for r in anova_results:
     report_html = generate_html_report(r)
 
     html_reports.append(f"""
     <details>
-      <summary> DV: {dv}</summary>
+      <summary> DV: {r.dv}</summary>
       {report_html}
     </details>
     """)
@@ -146,8 +155,6 @@ details[open] summary {{
 # with open("anova_report.html", "w", encoding="utf-8") as f:
 #     f.write(full_html)
 
-OUTPUT_DIR = BASE_DIR / "outputs"
-OUTPUT_DIR.mkdir(exist_ok=True)
 
 with open(OUTPUT_DIR / "anova_report.html", "w", encoding="utf-8") as f:
     f.write(full_html)

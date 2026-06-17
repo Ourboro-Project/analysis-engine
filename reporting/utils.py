@@ -35,7 +35,7 @@ def format_descriptive_table(df: pd.DataFrame) -> pd.DataFrame:
     """
     result = pd.DataFrame()
 
-    result["Cluster"] = df["cluster"]
+    result["Cluster"] = df["cluster_label"]
     result["N"] = df["N"].astype(int)
     result["Mean"] = df["Mean"].round(2)
     result["Std. Deviation"] = df["SD"].round(2)
