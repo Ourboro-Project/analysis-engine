@@ -152,9 +152,5 @@ details[open] summary {{
 </html>
 """
 
-# with open("anova_report.html", "w", encoding="utf-8") as f:
-#     f.write(full_html)
-
-
 with open(OUTPUT_DIR / "anova_report.html", "w", encoding="utf-8") as f:
     f.write(full_html)
