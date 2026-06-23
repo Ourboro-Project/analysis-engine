@@ -1,12 +1,12 @@
 from ..modules.stats import calculate_sum_of_squares, calculate_anova_statistics
-from ..modules.descriptive import calculate_group_statistics, calculate_year_means
+from ..modules.descriptive import calculate_group_statistics
 from ..modules.effect_size import calculate_effect_size
 from ..modules.posthoc import run_posthoc
 from ..models import ANOVAResult
 import pandas as pd
 
 
-def run_anova(df, iv, dv, year_col: str | None = None, alpha: float = 0.05) -> ANOVAResult:
+def run_anova(df, iv, dv, alpha: float = 0.05) -> ANOVAResult:
     """
     Run a complete ANOVA analysis pipeline.
 
@@ -22,7 +22,6 @@ def run_anova(df, iv, dv, year_col: str | None = None, alpha: float = 0.05) -> A
         df: input dataset
         iv: independent variable (clustering variable)
         dv: dependent variable 
-        year_col: optional column for grouped mean trends over an ordered variable (e.g., time, wave, stages)
         alpha: significance level for hypothesis testing (default: 0.05)
 
     Returns:
@@ -37,8 +36,6 @@ def run_anova(df, iv, dv, year_col: str | None = None, alpha: float = 0.05) -> A
         raise ValueError(f"iv '{iv}' not found in DataFrame")
     if dv not in df.columns:
         raise ValueError(f"dv '{dv}' not found in DataFrame")
-    if year_col and year_col not in df.columns:
-        raise ValueError(f"year_col '{year_col}' not found in DataFrame")
        
     # Type checks
     if not pd.api.types.is_numeric_dtype(df[dv]):
@@ -78,11 +75,9 @@ def run_anova(df, iv, dv, year_col: str | None = None, alpha: float = 0.05) -> A
     result = calculate_anova_statistics(ss, n_groups, n_samples)
 
     # 4. Build ANOVAResult and apply post-analysis if significant
-
     anova_result = ANOVAResult(
         group_stats = calculate_group_statistics(df, iv, dv),
         dv = dv,
-        year_means = calculate_year_means(df, iv, year_col, dv) if year_col else None,
         SSB = ss["SSB"],
         SSW = ss["SSW"],
         SST = ss["SST"],
