@@ -1,23 +1,24 @@
 import pandas as pd
 
-def format_p(p: float) -> str:
+def format_p(p: float, with_prefix: bool = True) -> str:
     """
     Format p-value in a readable way.
     
     Args: 
         p: p-value to format
+        with_prefix: Whether to include the "p = " prefix
     Returns:    
         Formatted p-value string
-    
     """
     if p < 0.001:
-        return "p < 0.001"
+        val = "< 0.001"
     elif p < 0.01:
-        return "p < 0.01"
+        val = "< 0.01"
     elif p < 0.05:
-        return "p < 0.05"
+        val = "< 0.05"
     else:
-        return f"p = {p:.3f} (ns)"
+        val = f"= {p:.3f} (ns)"
+    return f"p {val}" if with_prefix else val
     
 def interpret_eta_squared(eta: float) -> str:
     if eta >= 0.14:
@@ -34,11 +35,11 @@ def format_descriptive_table(df: pd.DataFrame) -> pd.DataFrame:
     """
     result = pd.DataFrame()
 
-    result["Cluster"] = df["cluster"]
+    result["Cluster"] = df["cluster_label"]
     result["N"] = df["N"].astype(int)
     result["Mean"] = df["Mean"].round(2)
-    result["SD"] = df["SD"].round(2)
-    result["SE"] = df["SE"].round(2)
+    result["Std. Deviation"] = df["SD"].round(2)
+    result["Std. Error"] = df["SE"].round(2)
     
     return result
 
@@ -64,12 +65,12 @@ def format_posthoc_table(df: pd.DataFrame) -> pd.DataFrame:
 
     result = pd.DataFrame()
 
-    result["Group A"] = df["A"]
-    result["Group B"] = df["B"]
-    result["Mean Diff"] = df["diff"].round(2)   
-    result["p-value"] = df["p_tukey"].apply(format_p)
-    result["Effect size(Hedges g)"] = df["hedges"].round(2)
-    result["t"] = df["T"].round(2)
-    result["SE"] = df["se"].round(3)
+    result["Group 1"] = df["A"]
+    result["Group 2"] = df["B"]
+    result["Mean Difference"] = df["diff"].round(2)   
+    result["p (Tukey)"] = df["p_tukey"].apply(format_p)
+    result["Effect size (Hedges’ g)"] = df["hedges"].round(2)
+    result["Tukey_Statistic"] = df["T"].round(2)
+    result["Std. Error"] = df["se"].round(3)
 
     return result

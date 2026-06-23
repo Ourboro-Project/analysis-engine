@@ -9,13 +9,25 @@ __pycache__/
 datasets/
 *.csv
 
+# report outputs
+outputs/
+*.html
+*.csv
+
 # conda / environments
 .env
 .venv/
 env/
+ENV/
+*.conda
+
+# IDE
+.vscode/
+.idea/
 
 # macOS
 .DS_Store
 
 # logs
+logs/
 *.log

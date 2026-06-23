@@ -3,7 +3,7 @@ import numpy as np
 
 def calculate_group_statistics(
     df: pd.DataFrame,
-    group_col: str,
+    iv: str,
     dv: str
 ) -> pd.DataFrame:
     """
@@ -11,8 +11,8 @@ def calculate_group_statistics(
 
     Args:
         df: input dataset
-        group_col: grouping variable (IV)
-        dv: dependent variable (DV)
+        iv: independent variable (clustering variable)
+        dv: dependent variable 
 
     Returns:
         DataFrame with group-level statistics: 
@@ -22,7 +22,7 @@ def calculate_group_statistics(
             SE: standard error of the mean (SD / sqrt(N)), uncertainty of mean estimate
     """
     summary = (
-        df.groupby(group_col)[dv]
+        df.groupby(iv)[dv]
         .agg(N="count", Mean="mean", SD="std")
         .reset_index()
     )
@@ -33,16 +33,16 @@ def calculate_group_statistics(
 
 def calculate_year_means(
     df: pd.DataFrame,
-    group_col: str,
+    iv: str,
     year_col: str,
     dv: str
 ) -> pd.DataFrame:
     """
-    Calculate mean of DV by group and year.
-    Returns a pivot table: rows = groups, columns = years.
+    Calculate mean of DV by cluster and year.
+    Returns a pivot table: rows = clusters, columns = years.
     """
     return (
-        df.groupby([group_col, year_col])[dv]
+        df.groupby([iv, year_col])[dv]
         .mean()
         .round(4)
         .unstack(level=year_col)
