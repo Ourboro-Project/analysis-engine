@@ -13,6 +13,7 @@ datasets/
 outputs/
 *.html
 *.csv
+*.png
 
 # conda / environments
 .env

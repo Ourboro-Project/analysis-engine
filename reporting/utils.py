@@ -74,3 +74,17 @@ def format_posthoc_table(df: pd.DataFrame) -> pd.DataFrame:
     result["Std. Error"] = df["se"].round(3)
 
     return result
+
+
+def format_p_star(p):
+    """
+    Convert p-value to significance stars for Tukey HSD heatmap
+    """
+    if p < 0.001:
+        return "***"
+    elif p < 0.01:
+        return "**"
+    elif p < 0.05:
+        return "*"
+    else:
+        return "ns"
