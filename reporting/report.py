@@ -103,6 +103,8 @@ ANOVA Summary Table
 {anova_df}
 """.strip()
 
+    table_posthoc = None    # default to None if result is non-significant
+
     # Table 3: Post-hoc (only if significant)
     if result.is_significant and result.posthoc_df is not None:
         posthoc_df = format_posthoc_table(result.posthoc_df)
