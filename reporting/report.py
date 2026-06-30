@@ -117,7 +117,7 @@ Post-hoc Comparisons (Tukey HSD)
 """.strip()
         
     # APA-style summary text   
-    eta_str = f", η² = {result.eta_squared:.3f}" if result.eta_squared else ""
+    eta_str = f", η² = {result.eta_squared:.3f}" if result.eta_squared is not None else ""
 
     interpretation = f"""
 A one-way ANOVA was conducted to examine differences in {dv_title} across groups.
@@ -148,7 +148,7 @@ def generate_html_report(result: ANOVAResult) -> str:
         f"{'statistically significant' if result.is_significant else 'non-significant'} "
         f"effect of group on {dv_title}, "
         f"F({result.df_between}, {result.df_within}) = {result.F:.2f}, "
-        f"{format_p(result.p, with_prefix=False)}{eta_str}.</p>"
+        f"{format_p(result.p)}{eta_str}.</p>"
     )
 
     # Table 2
@@ -156,7 +156,7 @@ def generate_html_report(result: ANOVAResult) -> str:
     table_descriptive = f"""
     <h3>Table 2. Clusters and {dv_title} ANOVA</h3>
     <p>{dv_title} Index Mean Values<br>
-       F = {result.F:.3f} (difference between groups), {format_p(result.p)}</p>
+       F = {result.F:.2f} (difference between groups), {format_p(result.p)}</p>
     {desc_html}
     """
 
