@@ -1,6 +1,8 @@
 import sys
 from pathlib import Path
 import pandas as pd
+import matplotlib
+matplotlib.use("Agg")                           # Use 'Agg' backend to generate plots as images without a display screen
 
 sys.path.insert(0, "/mnt/podman-data/mjhan")    # Temporary path: To be removed after packaging setup (pip install -e .)
 

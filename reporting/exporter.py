@@ -1,10 +1,12 @@
 import os 
 import pandas as pd
 from docx import Document
-from docx.shared import Pt
+from docx.shared import Pt, Inches
+from io import BytesIO
 
 from .utils import (format_descriptive_table, format_posthoc_table, format_p)
 from .report import build_anova_summary_table
+from .plotter import plot_mean_trend, plot_group_means, plot_tukey_heatmap
 
 
 def export_anova_to_csv(anova_results, output_dir):
@@ -99,6 +101,18 @@ def add_spacing(doc, pt=12):
     p.paragraph_format.space_after = Pt(pt)
 
 
+def add_figure_to_doc(doc, fig, width=6):
+    """
+    Add a matplotlib figure to a Word document.
+    """
+    buf = BytesIO()
+    fig.savefig(buf, format="png", bbox_inches="tight", dpi=300)
+    buf.seek(0)
+
+    doc.add_picture(buf, width=Inches(width))
+    buf.close()
+    
+
 def export_anova_to_docx(anova_results, output_dir):
     """
     Export ANOVA results into a Word report (one file per DV).
@@ -120,6 +134,10 @@ def export_anova_to_docx(anova_results, output_dir):
         wave_means = item["wave_means"].copy().reset_index()
         wave_means = wave_means.round(2)
         df_to_word_table(doc, wave_means)
+        add_spacing(doc, 12)
+        
+        fig = plot_mean_trend(item["wave_means"], dv=item["dv"])
+        add_figure_to_doc(doc, fig)
         add_spacing(doc, 18)
 
         doc.add_heading(f"Detailed ANOVA Results by Wave", level=1)
@@ -163,6 +181,9 @@ def export_anova_to_docx(anova_results, output_dir):
             df_to_word_table(doc, group_stats)
 
             add_spacing(doc, 12)
+            fig = plot_group_means(result, iv="cluster_label")
+            add_figure_to_doc(doc, fig)
+            add_spacing(doc, 12)
 
             # ANOVA Summary
             doc.add_heading(f"Table 3. One-Way ANOVA Results", level=2)
@@ -193,6 +214,10 @@ def export_anova_to_docx(anova_results, output_dir):
                 )
 
                 df_to_word_table(doc, posthoc)
+
+                add_spacing(doc, 12)
+                fig = plot_tukey_heatmap(result)
+                add_figure_to_doc(doc, fig)
 
             add_spacing(doc, 18)
 
