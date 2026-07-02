@@ -31,19 +31,3 @@ def calculate_group_statistics(
 
     return summary
 
-def calculate_year_means(
-    df: pd.DataFrame,
-    iv: str,
-    year_col: str,
-    dv: str
-) -> pd.DataFrame:
-    """
-    Calculate mean of DV by cluster and year.
-    Returns a pivot table: rows = clusters, columns = years.
-    """
-    return (
-        df.groupby([iv, year_col])[dv]
-        .mean()
-        .round(4)
-        .unstack(level=year_col)
-    )

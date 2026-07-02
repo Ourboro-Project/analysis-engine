@@ -34,11 +34,9 @@ class ANOVAResult:
     F: float
     p: float
 
-    # Default significance level
-    alpha: float = 0.05  
-
-    # Year mean comparison (optional, for ordered group trends)
-    year_means: pd.DataFrame | None = field(default=None, repr=False)
+    # Default fields
+    alpha: float = 0.05 
+    wave_label: str = "" 
     
     # Optional post-analysis when significant
     eta_squared: float | None = None
