@@ -14,6 +14,7 @@ outputs/
 *.html
 *.csv
 *.png
+*.docx
 
 # conda / environments
 .env

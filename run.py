@@ -98,7 +98,6 @@ for item in anova_results:
     for wave, r in item["by_wave"].items():
         wave_blocks.append(f"""
         <div class="wave-section">
-            <h2>Detailed ANOVA Results by Wave</h2>
             <h3>Wave: {wave}</h3>             
             <h3>ANOVA Summary</h3>
             {generate_html_report(r)}
@@ -109,6 +108,7 @@ for item in anova_results:
     <details>
         <summary>DV: {dv}</summary>
         {table_wave_trend}
+        <h2>Detailed ANOVA Results by Wave</h2>
         {''.join(wave_blocks)}
     </details>
     """)
